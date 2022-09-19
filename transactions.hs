@@ -1,4 +1,12 @@
-module Transactions (Transaction, appendTransaction, askExpense, askIncome, printTransaction, printTransactionsHistory) where
+module Transactions (
+    Transaction, 
+    appendTransaction,
+    askExpense, 
+    askIncome, 
+    printTransaction, 
+    printTransactionsHistory,
+    readTransactions
+) where
 
 import Data.List
 import Data.Maybe
@@ -37,6 +45,12 @@ askIncome = do
     currentDate <- Dates.date
     return (Transaction currentDate (read amount) desc)
 
+readTransactions :: String -> IO [Transaction]
+readTransactions file = do 
+    contents <- readFile file
+    let ls = lines contents
+    return $ (map read ls :: [Transaction])
+
 printTransaction :: Transaction -> IO ()
 printTransaction tr@(Transaction date amount desc) = 
     if (amount < 0) 
@@ -44,11 +58,12 @@ printTransaction tr@(Transaction date amount desc) =
     else if (amount > 0) then (successMessage $ tr2str tr)
     else (neutralMessage $ tr2str tr)
 
-printTransactionsHistory :: String -> IO ()
-printTransactionsHistory file = do
+printTransactionsHistory :: [Transaction] -> IO ()
+printTransactionsHistory transactions = do
     infoMessage "\n ===== Transaction History ===== \n\n"
-    contents <- readFile file
-    let ls = lines contents
-    mapM printTransaction $ (map read ls :: [Transaction])
+    mapM printTransaction $ transactions
     infoMessage "\n ===== End Of Transaction History ===== \n\n"
     return ()
+
+transactionsBill :: [Transaction] -> Amount
+transactionsBill = foldr (\(Transaction _ a _) sum -> sum + a) 0

@@ -24,7 +24,7 @@ handleActions (arg:rest) = do
         then receive
     else if arg == "history"
         then showHistory
-    else warningMessage $ "Oops, " ++ arg ++ " is not a known argument. Please try 'spend', 'receive' or 'history'"
+    else warningMessage $ "Oops, '" ++ arg ++ "' is not a known argument. Please try 'spend', 'receive' or 'history'\n"
     handleActions rest
 
 spend :: IO ()
@@ -38,4 +38,6 @@ receive = do
     Transactions.appendTransaction dataFile transaction
 
 showHistory :: IO ()
-showHistory = Transactions.printTransactionsHistory dataFile
+showHistory = do
+    transactions <- Transactions.readTransactions dataFile
+    Transactions.printTransactionsHistory transactions
