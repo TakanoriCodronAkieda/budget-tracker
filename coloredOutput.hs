@@ -22,7 +22,7 @@ changePrintColor c = do
 putStrColor :: Color -> String -> IO ()
 putStrColor c message = do
     changePrintColor c
-    putStrLn message
+    putStr message
     changePrintColor Default
 
 warningMessage :: String -> IO ()

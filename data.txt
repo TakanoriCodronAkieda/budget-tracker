@@ -1,8 +1,8 @@
-2022/9/12 -23 haircut
-2022/9/13 -37.45 IKEA
-2022/9/13 -14.9 weekly denner
-2022/9/13 -47.65 weekly migros
-2022/9/15 -15 sat rocks
-2022/9/17 -20 migros
-2022/9/17 -5 curry with jin
-2022/9/17 -90 genève <---> amsterdam 
+Transaction (2022,9,12) (-23.0) "haircut"
+Transaction (2022,9,13) (-37.45) "IKEA"
+Transaction (2022,9,13) (-14.9) "weekly denner"
+Transaction (2022,9,13) (-47.65) "weekly migros"
+Transaction (2022,9,15) (-15.0) "sat rocks"
+Transaction (2022,9,17) (-20.0) "migros"
+Transaction (2022,9,17) (-5.0) "curry with jin"
+Transaction (2022,9,17) (-90.0) "gen\232ve <---> amsterdam"

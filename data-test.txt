@@ -1,14 +1,13 @@
-2022/9/13 -23 hqircut
-2022/9/13 1500 the dqron
-2022/9/13 -23 hooo
-2022/9/13 -23 hallo
-2022/9/13 -12 monkberry
-2022/9/13 34 moon delight
-2022/9/13 -12 qll too much
-2022/9/13 120 hey bulldog
-2022/9/13 -111 helter skelter
-2022/9/13 333 and i see you again
-2022/9/13 -23 auitely
-2022/9/13 4 turing
-2022/9/14 0 test
-2022/9/14 0 test
+Transaction (2022,9,12) (-23.0) "haircut"
+Transaction (2022,9,13) (-37.45) "IKEA"
+Transaction (2022,9,13) (-14.9) "weekly denner"
+Transaction (2022,9,13) (-47.65) "weekly migros"
+Transaction (2022,9,15) (-15.0) "sat rocks"
+Transaction (2022,9,17) (-20.0) "migros"
+Transaction (2022,9,17) (-5.0) "curry with jin"
+Transaction (2022,9,17) (-90.0) "gen\232ve <---> amsterdam"
+Transaction (2022,9,19) (-2.0) "de"
+Transaction (2022,9,19) 2.0 "with a feather"
+Transaction (2022,9,19) 2.0 "yes you could"
+Transaction (2022,9,19) (-3.0) "but you know it's not allowed"
+Transaction (2022,9,19) (-2.0) "\"t\""

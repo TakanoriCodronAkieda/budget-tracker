@@ -12,7 +12,7 @@ dataFile = "data-test.txt"
 main :: IO ()
 main = do
     args <- getArgs
-    infoMessage $ "Provided arguments: " ++ show args
+    infoMessage $ "Provided arguments: " ++ show args ++ "\n"
     handleActions args
 
 handleActions :: [String] -> IO ()
@@ -38,16 +38,4 @@ receive = do
     Transactions.appendTransaction dataFile transaction
 
 showHistory :: IO ()
-showHistory = do
-    infoMessage "\n ===== Transaction History ===== \n"
-    contents <- readFile dataFile
-    let ls = lines contents
-    mapM showBudgetLine ls
-    infoMessage "\n ===== End Of Transaction History ===== \n"
-    return ()
-
-showBudgetLine :: String -> IO ()
-showBudgetLine line = do
-    let amount = words line !! 1
-    if (read amount < 0) then (warningMessage line) else (successMessage line)
-
+showHistory = Transactions.printTransactionsHistory dataFile
