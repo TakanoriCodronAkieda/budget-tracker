@@ -5,6 +5,7 @@ module Transactions (
     askIncome, 
     printTransaction, 
     printTransactionsHistory,
+    printTransactionsHistoryByWeeks,
     readTransactions
 ) where
 
@@ -17,15 +18,30 @@ data Transaction = Transaction Dates.Date Amount Description deriving (Show, Rea
 type Amount = Float
 type Description = String
 
+weeklyLimit = 100
+
 -- (date, amount, desc) --> "date amount desc"
 tr2str :: Transaction -> String
 tr2str (Transaction date amount desc) = (Dates.date2str date) ++ " " ++ (show amount) ++ " " ++ desc ++ "\n"
 
-appendTransaction :: String -> Transaction -> IO ()
-appendTransaction file tr = appendFile file $ show tr ++ "\n"
-
 inverseTransaction :: Transaction -> Transaction
 inverseTransaction (Transaction date a desc) = Transaction date (-a) desc
+
+readTransactions :: String -> IO [Transaction]
+readTransactions file = do 
+    contents <- readFile file
+    let ls = lines contents
+    return $ (map read ls :: [Transaction])
+
+transactionsBill :: [Transaction] -> Amount
+transactionsBill = foldr (\(Transaction _ a _) sum -> sum + a) 0
+
+groupTransactionsByWeek :: [Transaction] -> [[Transaction]]
+groupTransactionsByWeek = groupBy sameWeek
+    where sameWeek (Transaction d1 _ _) (Transaction d2 _ _) = Dates.sameWeekNumber d1 d2
+
+appendTransaction :: String -> Transaction -> IO ()
+appendTransaction file tr = appendFile file $ show tr ++ "\n"
 
 askExpense :: IO Transaction 
 askExpense = do
@@ -45,12 +61,6 @@ askIncome = do
     currentDate <- Dates.date
     return (Transaction currentDate (read amount) desc)
 
-readTransactions :: String -> IO [Transaction]
-readTransactions file = do 
-    contents <- readFile file
-    let ls = lines contents
-    return $ (map read ls :: [Transaction])
-
 printTransaction :: Transaction -> IO ()
 printTransaction tr@(Transaction date amount desc) = 
     if (amount < 0) 
@@ -60,10 +70,24 @@ printTransaction tr@(Transaction date amount desc) =
 
 printTransactionsHistory :: [Transaction] -> IO ()
 printTransactionsHistory transactions = do
-    infoMessage "\n ===== Transaction History ===== \n\n"
     mapM printTransaction $ transactions
-    infoMessage "\n ===== End Of Transaction History ===== \n\n"
     return ()
 
-transactionsBill :: [Transaction] -> Amount
-transactionsBill = foldr (\(Transaction _ a _) sum -> sum + a) 0
+printTransactionWeek :: [Transaction] -> IO ()
+printTransactionWeek [] = do
+    infoMessage "\nNo transactions to show \n"
+    return ()
+printTransactionWeek ts@((Transaction date _ _):_) = do
+    infoMessage $ "\nWeek " ++ (show $ Dates.weekNumber date) ++ "\n"
+    printTransactionsHistory ts
+    let total = transactionsBill ts
+    infoMessage $ "Weekly spending: "
+    (if total < -weeklyLimit
+        then warningMessage
+    else if total == 0 
+        then neutralMessage
+    else
+        successMessage) $ show total ++ "\n"
+    
+printTransactionsHistoryByWeeks :: [Transaction] -> IO [()]
+printTransactionsHistoryByWeeks = mapM printTransactionWeek . groupTransactionsByWeek

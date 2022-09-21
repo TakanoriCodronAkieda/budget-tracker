@@ -39,5 +39,7 @@ receive = do
 
 showHistory :: IO ()
 showHistory = do
+    infoMessage "\n ===== Transaction History ===== \n"
     transactions <- Transactions.readTransactions dataFile
-    Transactions.printTransactionsHistory transactions
+    Transactions.printTransactionsHistoryByWeeks transactions
+    infoMessage "\n ===== End Of Transaction History ===== \n\n"
