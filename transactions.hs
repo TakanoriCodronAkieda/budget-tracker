@@ -18,7 +18,8 @@ data Transaction = Transaction Dates.Date Amount Description deriving (Show, Rea
 type Amount = Float
 type Description = String
 
-weeklyLimit = 100
+weeklyLimit :: Float
+weeklyLimit = -100
 
 -- (date, amount, desc) --> "date amount desc"
 tr2str :: Transaction -> String
@@ -82,12 +83,13 @@ printTransactionWeek ts@((Transaction date _ _):_) = do
     printTransactionsHistory ts
     let total = transactionsBill ts
     infoMessage $ "Weekly spending: "
-    (if total < -weeklyLimit
-        then warningMessage
-    else if total == 0 
-        then neutralMessage
-    else
-        successMessage) $ show total ++ "\n"
+    smartMessage total weeklyLimit 5 $ show total ++ "\n"
     
-printTransactionsHistoryByWeeks :: [Transaction] -> IO [()]
-printTransactionsHistoryByWeeks = mapM printTransactionWeek . groupTransactionsByWeek
+printTransactionsHistoryByWeeks :: [Transaction] -> IO ()
+printTransactionsHistoryByWeeks ts = do
+    let total = transactionsBill ts
+    let groups = groupTransactionsByWeek ts
+    let nWeeks = fromIntegral $ length groups
+    mapM printTransactionWeek groups
+    infoMessage "\nAverage weekly expenses: "
+    smartMessage total weeklyLimit 5 $ show (total / nWeeks) ++ "\n"
